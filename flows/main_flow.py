@@ -13,7 +13,7 @@ def extract_urls(ort):
     links = []
     dates = []
 
-    globals()[f"df_{ort}"] = pd.read_csv(f"urls_{ort}.csv", header = None)
+    globals()[f"df_{ort}"] = pd.read_csv(f"/urls/urls_{ort}.csv", header = None)
     globals()[f"df_{ort}"]['https'] = 'https://www.mittelbayerische.de'
     globals()[f"df_{ort}"]['list_urls'] = globals()[f"df_{ort}"]['https'] + globals()[f"df_{ort}"][0]
     df = globals()[f"df_{ort}"] 
