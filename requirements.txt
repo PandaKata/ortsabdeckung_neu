@@ -1,0 +1,7 @@
+pandas==1.5.3
+requests
+beautifulsoup4==4.11.1
+prefect==2.7.7
+prefect-email
+openpyxl==3.1.2
+matplotlib==3.7.0
