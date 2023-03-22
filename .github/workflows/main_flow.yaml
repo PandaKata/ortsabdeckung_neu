@@ -1,7 +1,7 @@
 name: main_flow
 on:
   schedule:
-    - cron: '30 7 * * 1'
+    - cron: '30 7 * * *'
 
 jobs:
   run:
