@@ -11,7 +11,7 @@ on:
         description: Flow to run
         required: true
         type: choice
-        options: ['healthcheck.py', 'hello_subflow.py', 'parametrized.py']
+        options: ['main_flow.py']
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -27,6 +27,7 @@ jobs:
       - name: Python dependencies
         run: |
           pip install -U prefect==${{ github.event.inputs.prefect-version }}
+          pip install -r requirements.txt
 
       - name: Prefect Cloud login
         run: |
