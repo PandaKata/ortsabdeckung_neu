@@ -38,16 +38,8 @@ jobs:
           export PYTHONPATH="${PYTHONPATH}:/home/runner/work/prefect-getting-started/prefect-getting-started/"
           python flows/${{ github.event.inputs.flow }}
           
-      - name: Create gemeineabdeckung_mz.xlsx
-        run: |
-           touch gemeineabdeckung_mz.xlsx
-           echo "
-           ignore:
-               # False positive, see https://github.com/anchore/grype/issues/558
-               - vulnerability: CVE-2015-5237
-               fix-state: unknown
-               package:
-                 name: google.golang.org/protobuf
-                 version: v1.26.0
-                 type: go-module
-                 location: "/manager"" > ~/gemeineabdeckung_mz.xlsx
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gemeindeabdeckung_mz
+          path: gemeindeabdeckung_mz.xlsx
