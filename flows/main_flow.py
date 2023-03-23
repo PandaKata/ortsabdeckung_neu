@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 import re
 from datetime import datetime
 from prefect import flow, task
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
+from prefect_email import EmailServerCredentials, email_send_message
+
+#https://medium.com/the-prefect-blog/scheduled-data-pipelines-in-5-minutes-with-prefect-and-github-actions-39a5e4ab03f4
 
 @task(name='scraping', log_prints=True)
 def extract_urls(ort):
@@ -67,10 +68,10 @@ def extract_urls(ort):
 
 
 
-@flow(name='combine_dfs', log_prints=True)
-def combine_dfs():
+@flow(name='create_dfs', log_prints=True)
+def create_dfs():
     rgb = extract_urls('rgb')
-    print('rgb done')
+    print('finished rgb')
     cha = extract_urls('cha')
     print('finished cham')
     nm = extract_urls('nm')
@@ -84,18 +85,27 @@ def combine_dfs():
 
     return rgb, cha, nm, keh, sad, am
 
-
-@flow(name='wird schon', log_prints=True)
-def main_flow():
-    df = combine_dfs()
+@flow(name='clean df', log_prints=True)
+def clean_data():
+    df = create_dfs()
     df_final = pd.concat([df[0], df[1], df[2], df[3], df[4], df[5]], axis=1)
     df_final.fillna('-')
     df_final.columns = ['Regensburg', 'Letzter Artikel', 'Cham', 'Letzter Artikel', 
                         'Neumarkt', 'Letzter Artikel', 'Kelheim', 'Letzter Artikel',
                         'Schwandorf', 'Letzter Artikel', 'Amberg', 'Letzter Artikel']
     df_final = df_final.fillna('-')
-    df_final.to_excel('gemeindeabdeckung_mz.xlsx')
-    
+    return df_final
+
+@flow(name='complete', log_prints=True)
+def main_flow():
+    df = clean_data()
+    file_path = 'gemeindeabdeckung_mz.xlsx'
+    with open(file_path, 'w') as file:
+        file.write(df.to_string(index=False))
+
+    #df.to_excel('gemeindeabdeckung_mz.xlsx')
+    print('done')
+
 
 if __name__ == '__main__':
     main_flow()
