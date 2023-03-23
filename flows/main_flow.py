@@ -2,9 +2,13 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import re
-from datetime import datetime
 from prefect import flow, task
-from prefect_email import EmailServerCredentials, email_send_message
+import os
+import json
+import gspread
+from google.oauth2 import service_account
+from google.oauth2.credentials import Credentials
+from gspread_dataframe import set_with_dataframe
 
 #https://medium.com/the-prefect-blog/scheduled-data-pipelines-in-5-minutes-with-prefect-and-github-actions-39a5e4ab03f4
 
