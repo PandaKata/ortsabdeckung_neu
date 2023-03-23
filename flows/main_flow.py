@@ -99,9 +99,31 @@ def clean_data():
 @flow(name='complete', log_prints=True)
 def main_flow():
     df = clean_data()
-    file_path = 'gemeindeabdeckung_mz.xlsx'
-    with open(file_path, 'w') as file:
-        file.write(df.to_string(index=False))
+    
+    # Load Google API credentials from GitHub secret
+    credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+    credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
+
+    # Initialize the Google Sheets client
+    client = gspread.authorize(credentials)
+    
+    # Define the target Google Sheets file and worksheet
+    sheet_id = '17nUX78a09BQHKrPU8NrzynGVwwMEjeMcTS17ggKgzR8'
+    worksheet_name = 'Sheet1'
+
+    # Open the Google Sheets file and worksheet
+    sheet = client.open_by_key(sheet_id)
+    worksheet = sheet.worksheet(worksheet_name)
+
+    # Clear the existing content in the worksheet
+    worksheet.clear()
+
+    # Save the DataFrame to the worksheet
+    set_with_dataframe(worksheet, df)
+    
+    #file_path = 'gemeindeabdeckung_mz.xlsx'
+    #with open(file_path, 'w') as file:
+        #file.write(df.to_string(index=False))
 
     #df.to_excel('gemeindeabdeckung_mz.xlsx')
     print('done')
