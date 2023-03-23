@@ -28,20 +28,3 @@ jobs:
           export PYTHONPATH="${PYTHONPATH}:/home/runner/work/prefect-getting-started/prefect-getting-started/"
           python flows/main_flow.py
       
-      
-      - name: Check out repository
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-
-      - name: Set up Git
-        run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "katharina.eichinger@mittelbayerische.de"
-
-      - name: Create and save file
-        run: |
-          echo "Timestamp: $(date)" > gemeindeabdeckung.csv
-          git add gemeindeabdeckung.csv
-          git commit -m "Add timestamp file"
-          git push
