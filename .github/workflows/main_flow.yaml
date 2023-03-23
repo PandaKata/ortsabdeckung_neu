@@ -23,7 +23,12 @@ jobs:
         run: |
           prefect config set PREFECT_API_KEY=${{secrets.PREFECT_API_KEY}} 
           prefect cloud workspace set --workspace "${{secrets.PREFECT_WORKSPACE}}"
+      - name: Google Credentials
+        run: |
+          pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas gspread gspread_dataframe
       - name: main_flow
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           export PYTHONPATH="${PYTHONPATH}:/home/runner/work/prefect-getting-started/prefect-getting-started/"
           python flows/main_flow.py
