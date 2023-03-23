@@ -1,7 +1,7 @@
 name: main_flow
 on:
   schedule:
-    - cron: '30 7 * * *'
+    - cron: '30 5 * * *'
 
 jobs:
   run:
@@ -29,8 +29,19 @@ jobs:
           python flows/main_flow.py
       
       
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
+      - name: Check out repository
+        uses: actions/checkout@v2
         with:
-          name: gemeindeabdeckung_mz
-          path: gemeindeabdeckung_mz.xlsx
+          persist-credentials: false
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@users.noreply.github.com"
+
+      - name: Create and save file
+        run: |
+          echo "Timestamp: $(date)" > gemeindeabdeckung.csv
+          git add gemeindeabdeckung.csv
+          git commit -m "Add timestamp file"
+          git push
