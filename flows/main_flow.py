@@ -105,45 +105,27 @@ def main_flow():
     #df = clean_data()
     df = 'test'
     
-    # Authenticate and authorize access to the Google Sheets API
-    # delete when donw!!!!!!!
-    creds = Credentials.from_authorized_user_file('gsheets.json', ['https://www.googleapis.com/auth/spreadsheets'])
-    
-    
-    
-    # Define the spreadsheet ID and range to update
-    spreadsheet_id = '17nUX78a09BQHKrPU8NrzynGVwwMEjeMcTS17ggKgzR8'
-    range_name = 'Sheet1!A1'
-
-    # Convert the dataframe to a list of lists and update the range
-    values = df.values.tolist()
-    service = build('sheets', 'v4', credentials=creds)
-    body = {'values': values}
-    result = service.spreadsheets().values().update(
-    spreadsheetId=spreadsheet_id, range=range_name,
-    valueInputOption='RAW', body=body).execute()
-    print('{0} cells updated.'.format(result.get('updatedCells')))
     
     # Load Google API credentials from GitHub secre
-    #credentials_json = json.loads(os.environ[GOOGLE_APPLICATION_CREDENTIALS])
-    #credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
+    credentials_json = json.loads(os.environ[GOOGLE_APPLICATION_CREDENTIALS])
+    credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
 
     # Initialize the Google Sheets client
-    #client = gspread.authorize(credentials)
+    client = gspread.authorize(credentials)
     
     # Define the target Google Sheets file and worksheet
-    #sheet_id = '17nUX78a09BQHKrPU8NrzynGVwwMEjeMcTS17ggKgzR8'
-    #worksheet_name = 'Sheet1'
+    sheet_id = '17nUX78a09BQHKrPU8NrzynGVwwMEjeMcTS17ggKgzR8'
+    worksheet_name = 'Sheet1'
 
     # Open the Google Sheets file and worksheet
-    #sheet = client.open_by_key(sheet_id)
-    #worksheet = sheet.worksheet(worksheet_name)
+    sheet = client.open_by_key(sheet_id)
+    worksheet = sheet.worksheet(worksheet_name)
 
     # Clear the existing content in the worksheet
-   # worksheet.clear()
+    worksheet.clear()
 
     # Save the DataFrame to the worksheet
-    #set_with_dataframe(worksheet, df)
+    set_with_dataframe(worksheet, df)
     
     #file_path = 'gemeindeabdeckung_mz.xlsx'
     #with open(file_path, 'w') as file:
