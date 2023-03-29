@@ -105,6 +105,9 @@ def main_flow():
     #df = clean_data()
     df = 'test'
     
+    # print all the environment variables
+    print(os.environ)
+    
     
     # Load Google API credentials from GitHub secre
     credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
