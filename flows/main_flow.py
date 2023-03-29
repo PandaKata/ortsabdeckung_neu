@@ -105,8 +105,11 @@ def main_flow():
     #df = clean_data()
     df = 'test'
     
+    with open('gsheets.json') as f:
+        credentials_json = json.load(f)
+    
     # Load Google API credentials from GitHub secre
-    credentials_json = json.loads(os.environ[GOOGLE_APPLICATION_CREDENTIALS])
+    #credentials_json = json.loads(os.environ[GOOGLE_APPLICATION_CREDENTIALS])
     credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
 
     # Initialize the Google Sheets client
