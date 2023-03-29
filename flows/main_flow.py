@@ -114,9 +114,10 @@ def main_flow():
     #credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
     #credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
     
-    
-    credentials_json = base64.b64decode(os.environ['GOOGLE_APPLICATION_CREDENTIALS']).decode('utf-8')
-    credentials = json.loads(credentials_json)
+    # Decode the base64-encoded string and load it as a JSON object
+    credentials_json_str = base64.b64decode(os.environ['GOOGLE_APPLICATION_CREDENTIALS']).decode('utf-8')
+    credentials_json = json.loads(credentials_json_str)
+    credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
 
     # Initialize the Google Sheets client
     client = gspread.authorize(credentials)
