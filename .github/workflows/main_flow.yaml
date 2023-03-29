@@ -31,7 +31,7 @@ jobs:
         env:
           GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
         run: |
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo "$GOOGLE_APPLICATION_CREDENTIALS" | base64 --decode)" >> $GITHUB_ENV
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(echo "$GOOGLE_CREDENTIALS_BASE64" | base64 --decode)" >> $GITHUB_ENV
       - name: main_flow
         run: |
           export PYTHONPATH="${PYTHONPATH}:/home/runner/work/prefect-getting-started/prefect-getting-started/"
