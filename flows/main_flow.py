@@ -103,8 +103,7 @@ def clean_data():
 
 @flow(name='complete', log_prints=True)
 def main_flow():
-    #df = clean_data()
-    df = 'test'
+    df = clean_data()
     
     # print all the environment variables
     print("GOOGLE_APPLICATION_CREDENTIALS:", os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
