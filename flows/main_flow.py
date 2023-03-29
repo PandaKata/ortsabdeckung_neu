@@ -105,15 +105,8 @@ def main_flow():
     #df = clean_data()
     df = 'test'
     
-    # Load Google API credentials from GitHub secret
-    try:
-        credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
-    except json.decoder.JSONDecodeError as e:
-        print(f"Error loading Google API credentials: {e}")
-        return
-    
-    
-    #credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
+    # Load Google API credentials from GitHub secre
+    credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
     credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
 
     # Initialize the Google Sheets client
