@@ -110,7 +110,7 @@ def main_flow():
     
     
     # Load Google API credentials from GitHub secre
-    credentials_json = json.loads(os.environ[GOOGLE_APPLICATION_CREDENTIALS])
+    credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
     credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
 
     # Initialize the Google Sheets client
