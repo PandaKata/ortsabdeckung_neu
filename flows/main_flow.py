@@ -105,14 +105,6 @@ def clean_data():
 def main_flow():
     df = clean_data()
     
-    # print all the environment variables
-    print("GOOGLE_APPLICATION_CREDENTIALS:", os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
-    
-    
-    # Load Google API credentials from GitHub secre
-    #credentials_json = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
-    #credentials = service_account.Credentials.from_service_account_info(info=credentials_json)
-    
     # Decode the base64-encoded string and load it as a JSON object
     credentials_json_str = base64.b64decode(os.environ['GOOGLE_APPLICATION_CREDENTIALS']).decode('utf-8')
     credentials_json = json.loads(credentials_json_str)
