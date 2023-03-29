@@ -35,11 +35,11 @@ jobs:
       - name: Google Credentials
         run: |
           pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas gspread gspread_dataframe
-      - name: Set up Google API credentials
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+
       - name: main_flow
         run: |
           export PYTHONPATH="${PYTHONPATH}:/home/runner/work/prefect-getting-started/prefect-getting-started/"
           python flows/main_flow.py
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       
