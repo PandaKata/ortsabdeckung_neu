@@ -39,4 +39,4 @@ jobs:
       - name: Run Python script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          run: python flows/main_flow.py
+        run: python flows/main_flow.py
