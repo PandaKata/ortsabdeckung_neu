@@ -106,7 +106,7 @@ def main_flow():
     df = 'test'
     
     # print all the environment variables
-    print(os.environ)
+    print("GOOGLE_APPLICATION_CREDENTIALS:", os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
     
     
     # Load Google API credentials from GitHub secre
