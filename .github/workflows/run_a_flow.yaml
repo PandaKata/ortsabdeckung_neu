@@ -36,7 +36,7 @@ jobs:
         run: |
           pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pandas gspread gspread_dataframe
 
-            - name: Run Python script
+      - name: Run Python script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           run: python flows/main_flow.py
