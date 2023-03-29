@@ -6,6 +6,8 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -26,8 +28,7 @@ jobs:
           prefect cloud workspace set --workspace "${{secrets.PREFECT_WORKSPACE}}"
           
       - name: Save DataFrame to Google Sheet
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        
         run: |
           echo "$GOOGLE_APPLICATION_CREDENTIALS" | base64 --decode > credentials.json
           python flows/main_flow.py
