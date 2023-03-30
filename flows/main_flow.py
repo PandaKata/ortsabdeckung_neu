@@ -16,6 +16,13 @@ import base64
 @task(name='scraping', log_prints=True)
 def extract_urls(ort):
     
+    csv_file = f"urls/urls_mz/urls_{ort}.csv"
+
+    if os.path.getsize(csv_file) == 0:
+        print(f"The file {csv_file} is empty.")
+    else:
+        globals()[f"df_{ort}"] = pd.read_csv(csv_file, header=None)
+    
     links = []
     dates = []
 
