@@ -1,4 +1,4 @@
-name: main_flow
+name: mz_flow
 on:
   schedule:
     - cron: '30 5 * * *'
@@ -30,4 +30,4 @@ jobs:
       - name: Save DataFrame to Google Sheet
         
         run: |
-          python flows/main_flow.py
+          python flows/mz_flow.py
