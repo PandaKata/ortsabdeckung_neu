@@ -11,7 +11,7 @@ on:
         description: Flow to run
         required: true
         type: choice
-        options: ['main_flow.py']
+        options: ['mz_flow.py']
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -42,4 +42,4 @@ jobs:
       - name: Save DataFrame to Google Sheet
 
         run: |
-          python flows/main_flow.py
+          python flows/mz_flow.py
