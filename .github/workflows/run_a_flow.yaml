@@ -11,7 +11,7 @@ on:
         description: Flow to run
         required: true
         type: choice
-        options: ['mz_flow.py', 'dk_flow.py']
+        options: ['mz_flow.py', 'dk_flow.py', 'pnp_flow.py']
 jobs:
   run:
     runs-on: ubuntu-latest
