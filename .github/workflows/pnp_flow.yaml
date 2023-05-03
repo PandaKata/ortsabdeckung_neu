@@ -1,4 +1,4 @@
-name: dk_flow
+name: pnp_flow
 on:
   schedule:
     - cron: '5 6 * * *'
