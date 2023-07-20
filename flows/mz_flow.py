@@ -1,7 +1,8 @@
-import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import re
+from datetime import datetime
+import pandas as pd
 from prefect import flow, task
 import os
 import json
@@ -12,6 +13,7 @@ from gspread_dataframe import set_with_dataframe
 import base64
 
 #https://medium.com/the-prefect-blog/scheduled-data-pipelines-in-5-minutes-with-prefect-and-github-actions-39a5e4ab03f4
+
 
 @task(name='scraping', log_prints=True)
 def extract_urls(ort):
@@ -28,25 +30,24 @@ def extract_urls(ort):
         URL = df['list_urls'][row]
         page = requests.get(URL)
         soup = BeautifulSoup(page.text, 'html.parser')
-        result = soup.find(class_="teaser teaser-33-lead") 
-        link = result.find('a')['href']
+        result = soup.find(class_="margin-right-10 d-block") 
+        link = result.get('href')
         links.append(link)
     
-    # create URLs, add https... 
-    append_str = 'https://www.mittelbayerische.de'
-
-    new_articles = [append_str + sub for sub in links]
-
-    for row in range(len(new_articles)):
-        URL = new_articles[row]
+    for row in range(len(df)):
+        URL = links[row]
         page = requests.get(URL)
         soup = BeautifulSoup(page.text, 'html.parser')
-        result = soup.find(class_="date")
-        date = result.text
-        dates.append(date) 
+        result = soup.find(class_="date-published")
+        date_in_string = result.text
+        date2 = re.sub(r' ', '', date_in_string)
+        date3 = re.sub(r'\n', '', date2)
+        #date4 = re.sub(r'\.', '/', date3)
+        first_chars = date3[0:10]
+        dates.append(first_chars) 
     
     # create column with only gemeindenamen
-    df['gemeinde'] = df[0].str.split('/',expand=True)[4]
+    df['gemeinde'] = df[0].str.split('/',expand=True)[3]
 
     # add dates to df
     df['datum'] = dates
@@ -55,17 +56,18 @@ def extract_urls(ort):
     df = df.drop([0, 'https', 'list_urls'], axis=1)
 
     # convert to datetime 
-    # format must be international
-    d = {'Januar': 'Jan', 'Februar': 'Feb', 'März': 'Mar', 'April': 'Apr', 'Mai':'May', 'Juni': 'Jun', 'Juli': 'Jul', 'August': 'Aug', 'September': 'Sep', 'Oktober':'Oct', 'November': 'Nov', 'Dezember':'Dec'}
-    df['datum']=pd.to_datetime(df['datum'].replace(d, regex=True), errors='coerce')
+    df['datum']=pd.to_datetime(df['datum'],format='%d.%m.%Y')
 
     df['Heute'] = pd.Timestamp("today").strftime("%Y/%m/%d")
+
     df['Heute'] = pd.to_datetime(df['Heute'])
+
     df['Letzter Artikel'] = df['Heute']-df['datum']
 
     df = df.drop(['Heute'], axis=1)
 
-    df['Letzter Artikel'] = df['Letzter Artikel'].astype(str).str[:-5].astype('int')
+    df['Letzter Artikel'] = df['Letzter Artikel'].astype(str).str[:-5]#.astype('int')
+    df['Letzter Artikel'] = df['Letzter Artikel'].astype('int')
 
     df = df.sort_values(by=['Letzter Artikel'], ascending=False).reset_index().drop(['index', 'datum'], axis=1)
 
@@ -78,7 +80,7 @@ def create_dfs():
     rgb = extract_urls('rgb')
     print('finished rgb')
     cha = extract_urls('cha')
-    print('finished cham')
+    print('finished cha')
     nm = extract_urls('nm')
     print('finished nm')
     keh = extract_urls('keh')
@@ -86,9 +88,11 @@ def create_dfs():
     sad = extract_urls('sad')
     print('finished sad')
     am = extract_urls('am')
-    print('am finished')
+    print('finished am')
 
     return rgb, cha, nm, keh, sad, am
+
+
 
 @flow(name='clean df', log_prints=True)
 def clean_data():
@@ -101,6 +105,8 @@ def clean_data():
     df_final = df_final.fillna('-')
     return df_final
 
+
+
 @flow(name='complete', log_prints=True)
 def main_flow():
     df = clean_data()
@@ -109,7 +115,6 @@ def main_flow():
     credentials_json_str = base64.b64decode(os.environ['GOOGLE_APPLICATION_CREDENTIALS']).decode('utf-8')
     credentials_json = json.loads(credentials_json_str)
     credentials = service_account.Credentials.from_service_account_info(info=credentials_json, scopes=['https://www.googleapis.com/auth/spreadsheets'])
-
 
     # Initialize the Google Sheets client
     client = gspread.authorize(credentials)
@@ -134,6 +139,7 @@ def main_flow():
 
     #df.to_excel('gemeindeabdeckung_mz.xlsx')
     print('done')
+
 
 
 if __name__ == '__main__':
